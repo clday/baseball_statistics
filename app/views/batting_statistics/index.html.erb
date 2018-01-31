@@ -1,0 +1,72 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Leaderboard</h1>
+
+<%= form_tag '/leaderboard', method: :get do %>
+  <%= label_tag(:leader_type, "Leader Type")%>
+  <% leader_types = [['Batting', 'batting_average'], ['Slugging', 'slugging_percentage']] %>
+  <%= select_tag(:leader_type, options_for_select(leader_types, params[:leader_type]))%>
+
+  <%= label_tag(:league)%>
+  <% leagues = BattingStatistic.pluck(:league).uniq.sort %>
+  <%= select_tag(:league, options_for_select(leagues, params[:league]), include_blank: 'All')%>
+
+  <%= label_tag(:team)%>
+  <% teams = BattingStatistic.pluck(:team_id).uniq.sort %>
+  <%= select_tag(:team, options_for_select(teams, params[:team]), include_blank: 'All')%>
+
+  <%= label_tag(:season)%>
+  <% seasons = BattingStatistic.pluck(:year).uniq.sort %>
+  <%= select_tag(:season, options_for_select(seasons, params[:season]), include_blank: 'All Time')%>
+  <br>
+  <%= submit_tag("Refresh") %>
+<% end %>
+<br>
+
+<table>
+  <thead>
+    <tr>
+      <th>Team</th>
+      <th>Player</th>
+      <th>Year</th>
+      <th>League</th>
+      <th>Games</th>
+      <th>At bats</th>
+      <th>Runs</th>
+      <th>Hits</th>
+      <th>Double</th>
+      <th>Triples</th>
+      <th>Home runs</th>
+      <th>Runs batted in</th>
+      <th>Stolen bases</th>
+      <th>Caught stealing</th>
+      <th>Batting Average</th>
+      <th>Slugging Percentage</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @batting_statistics.each do |batting_statistic| %>
+      <tr>
+        <td><%= batting_statistic.team_id %></td>
+        <td><%= batting_statistic.player.full_name %></td>
+        <td><%= batting_statistic.year %></td>
+        <td><%= batting_statistic.league %></td>
+        <td><%= batting_statistic.games %></td>
+        <td><%= batting_statistic.at_bats %></td>
+        <td><%= batting_statistic.runs %></td>
+        <td><%= batting_statistic.hits %></td>
+        <td><%= batting_statistic.doubles %></td>
+        <td><%= batting_statistic.triples %></td>
+        <td><%= batting_statistic.home_runs %></td>
+        <td><%= batting_statistic.runs_batted_in %></td>
+        <td><%= batting_statistic.stolen_bases %></td>
+        <td><%= batting_statistic.caught_stealing %></td>
+        <td><%= sprintf('%.3f', batting_statistic.batting_average) %></td>
+        <td><%= sprintf('%.3f',batting_statistic.slugging_percentage) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @batting_statistics %>
