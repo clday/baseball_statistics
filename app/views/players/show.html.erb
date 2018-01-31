@@ -1,0 +1,83 @@
+<p id="notice"><%= notice %></p>
+<%= link_to 'Edit', edit_player_path(@player) %> |
+<%= link_to 'Back', players_path %>
+<p>
+  <strong>First name:</strong>
+  <%= @player.first_name %>
+</p>
+
+<p>
+  <strong>Last name:</strong>
+  <%= @player.last_name %>
+</p>
+
+<p>
+  <strong>Player ID:</strong>
+  <%= @player.player_id %>
+</p>
+
+<p>
+  <strong>Birth year:</strong>
+  <%= @player.birth_year %>
+</p>
+
+<% if @player.batting_statistics.any? %>
+<table>
+  <tr>
+    <th>Year</th>
+    <th>League</th>
+    <th>Team</th>
+    <th>Games</th>
+    <th>At Bats</th>
+    <th>Runs</th>
+    <th>Hits</th>
+    <th>Doubles</th>
+    <th>Triples</th>
+    <th>Home Runs</th>
+    <th>RBIs</th>
+    <th>Stolen Bases</th>
+    <th>Caught Stealing</th>
+    <th>Batting Average</th>
+    <th>Slugging Percentage</th>
+  </tr>
+  <% @player.batting_statistics.order(:year).each do |batting_statistic| %>
+    <tr>
+      <td><%= batting_statistic.year %></td>
+      <td><%= batting_statistic.league %></td>
+      <td><%= batting_statistic.team_id %></td>
+      <td><%= batting_statistic.games %></td>
+      <td><%= batting_statistic.at_bats %></td>
+      <td><%= batting_statistic.runs %></td>
+      <td><%= batting_statistic.hits %></td>
+      <td><%= batting_statistic.doubles %></td>
+      <td><%= batting_statistic.triples %></td>
+      <td><%= batting_statistic.home_runs %></td>
+      <td><%= batting_statistic.runs_batted_in %></td>
+      <td><%= batting_statistic.stolen_bases %></td>
+      <td><%= batting_statistic.caught_stealing %></td>
+      <td><%= sprintf('%.3f', batting_statistic.batting_average) %></td>
+      <td><%= sprintf('%.3f',batting_statistic.slugging_percentage) %></td>
+    </tr>
+  <% end %>
+  <tr>
+    <th>Total</th>
+    <td></td>
+    <td></td>
+    <td><%= @player.batting_statistics.sum(&:games) %></td>
+    <td><%= @player.batting_statistics.sum(&:at_bats) %></td>
+    <td><%= @player.batting_statistics.sum(&:runs) %></td>
+    <td><%= @player.batting_statistics.sum(&:hits) %></td>
+    <td><%= @player.batting_statistics.sum(&:doubles) %></td>
+    <td><%= @player.batting_statistics.sum(&:triples) %></td>
+    <td><%= @player.batting_statistics.sum(&:home_runs) %></td>
+    <td><%= @player.batting_statistics.sum(&:runs_batted_in) %></td>
+    <td><%= @player.batting_statistics.sum(&:stolen_bases) %></td>
+    <td><%= @player.batting_statistics.sum(&:caught_stealing) %></td>
+    <td><%= sprintf('%.3f', BigDecimal.new(@player.batting_statistics.sum(&:hits)) / @player.batting_statistics.sum(&:at_bats)) %></td>
+    <td><%= sprintf('%.3f', BigDecimal.new(@player.batting_statistics.sum(&:total_bases)) / @player.batting_statistics.sum(&:at_bats)) %></td>
+  </tr>
+</table>
+
+<% else %>
+  <strong>No batting statistics for this player</strong>
+<% end %>

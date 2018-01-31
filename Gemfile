@@ -20,6 +20,9 @@ gem 'uglifier', '>= 1.3.0'
 # uploading spreadsheets to database
 gem 'csv-importer', '~> 0.5.0'
 
+# pagination
+gem 'kaminari', '~> 1.1.1'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -27,6 +30,7 @@ end
 
 group :test do
   gem 'rspec-rails', '~> 3.7'
+  gem 'capybara', '~> 2.17.0'
 end
 
 group :development do
